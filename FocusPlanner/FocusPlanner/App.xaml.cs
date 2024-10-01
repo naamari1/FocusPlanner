@@ -34,13 +34,27 @@ namespace FocusPlanner
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             // Register other services and repositories here
+
+            // Register MainWindow to be resolved by the service provider
+            services.AddSingleton<MainWindow>();
         }
+
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
             var mainWindow = _serviceProvider.GetService<MainWindow>();
-            mainWindow.Show();
+            if (mainWindow != null)
+            {
+                mainWindow.Show();
+            }
+            else
+            {
+                // Consider logging this situation or handling it appropriately
+                throw new InvalidOperationException("MainWindow could not be resolved. Please check your service registrations.");
+            }
         }
+
     }
 
 }
