@@ -6,50 +6,109 @@
         xmlns:local="clr-namespace:FocusPlanner"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         mc:Ignorable="d"
-        Title="FocusPlanner" Height="600" Width="1000">
+        Title="FocusPlanner" Height="450" Width="900"
+        Background="#F0F0F0">
+    <!-- Light gray background for the app -->
 
-    <Grid>
-        <!-- Toolbar Section -->
-        <ToolBar Grid.ColumnSpan="3" Grid.Row="0" Padding="10">
-            <Button Content="Add Task" Width="100" Height="30" Margin="5" />
-            <TextBox Width="200" Margin="5"  />
-            <ComboBox Width="150" Margin="5">
-                <ComboBoxItem Content="Sort by Date" />
-                <ComboBoxItem Content="Sort by Category" />
-            </ComboBox>
-        </ToolBar>
+    <!-- Main Layout Grid -->
+    <Grid Margin="10">
+        <!-- Define Rows for Layout -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- First row for filters, TextBox, and Button -->
+            <RowDefinition Height="*" />
+            <!-- Second row for TaskDataGrid and CheckListBox -->
+        </Grid.RowDefinitions>
 
-        <!-- Sidebar Section: Category Navigation -->
-        <syncfusion:SfTreeView Grid.Column="0" Grid.Row="1" Margin="10"
-                              
-                               ItemsSource="{Binding Categories}">
-            <syncfusion:SfTreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding SubCategories}">
-                    <TextBlock Text="{Binding Name}" />
-                </HierarchicalDataTemplate>
-            </syncfusion:SfTreeView.ItemTemplate>
-        </syncfusion:SfTreeView>
+        <!-- Column Definitions -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <!-- Date Filter Column -->
+            <ColumnDefinition Width="*" />
+            <!-- TextBox Column -->
+            <ColumnDefinition Width="Auto" />
+            <!-- Completed Tasks Filter -->
+            <ColumnDefinition Width="Auto" />
+            <!-- Button Column -->
+        </Grid.ColumnDefinitions>
 
-        <!-- Task List Section -->
-        <syncfusion:SfDataGrid Grid.Column="1" Grid.Row="1" Margin="10"
-                               AutoGenerateColumns="False" 
-                               SelectionMode="Single"
-                               ItemsSource="{Binding Tasks}">
-            <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn MappingName="Title" HeaderText="Task" />
-                <syncfusion:GridDateTimeColumn MappingName="DueDate" HeaderText="Due Date" Width="150" />
-                <syncfusion:GridCheckBoxColumn MappingName="IsCompleted" HeaderText="Completed" Width="100" />
-            </syncfusion:SfDataGrid.Columns>
-        </syncfusion:SfDataGrid>
-
-        <!-- Task Details Pane -->
-        <StackPanel Grid.Column="2" Grid.Row="1" Margin="10">
-            <TextBlock Text="Task Details" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
-            <TextBox Text="{Binding SelectedTask.Title}"  Margin="0,0,0,5" />
-            <TextBox Text="{Binding SelectedTask.Description}"  Margin="0,0,0,5" />
-            <DatePicker SelectedDate="{Binding SelectedTask.DueDate}" Margin="0,0,0,5" />
-            <CheckBox IsChecked="{Binding SelectedTask.IsCompleted}" Content="Completed" Margin="0,0,0,10" />
-            <Button Content="Save Task" Width="100" />
+        <!-- Single Date Filter -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="5">
+            <TextBlock Text="Due Date:" VerticalAlignment="Center" Margin="5,0" Foreground="#333333" />
+            <!-- Dark text -->
+            <DatePicker x:Name="dueDatePicker" Width="150" Margin="5" Background="White" BorderBrush="#007ACC" />
+            <!-- Blue border -->
         </StackPanel>
+
+        <!-- Search Box -->
+        <TextBox x:Name="txtSearch" Grid.Row="0" Grid.Column="1" Width="400" Height="36" VerticalAlignment="Center" Margin="5"
+                 Background="White" BorderBrush="#007ACC" Foreground="Black" />
+        <!-- White background with blue border -->
+
+        <!-- Show Completed Tasks CheckBox -->
+        <CheckBox Content="Show Completed Tasks" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="5" 
+                  IsChecked="{Binding ShowCompletedTasks}" Foreground="#007ACC" />
+        <!-- Blue text for the checkbox -->
+
+        <!-- Add Task Button -->
+        <Button x:Name="btnAddTask" Content="+" Grid.Row="0" Grid.Column="3" Width="40" Height="36" VerticalAlignment="Center" Margin="5"
+                Background="#007ACC" Foreground="White" BorderThickness="0" />
+        <!-- Blue background, white text for the button -->
+
+        <!-- Task List and CheckListBox Section -->
+        <Grid Grid.Row="1" Grid.ColumnSpan="4" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <!-- SfDataGrid for tasks -->
+                <ColumnDefinition Width="1*" />
+                <!-- CheckListBox for categories -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Task List (Syncfusion DataGrid) -->
+            <syncfusion:SfDataGrid x:Name="TaskDataGrid" Grid.Column="0" AutoGenerateColumns="False" Margin="5" 
+                                   Background="White" Foreground="#333333" 
+                                   
+                                   >
+                <!-- Blue header, alternating rows -->
+                <!-- Define your task columns here -->
+                <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridTextColumn MappingName="Title" HeaderText="Task" />
+                    <syncfusion:GridDateTimeColumn MappingName="DueDate" HeaderText="Due Date" Width="150" />
+                    <syncfusion:GridCheckBoxColumn MappingName="IsCompleted" HeaderText="Completed" Width="100" />
+
+                    <!-- Priority column with dynamic color binding -->
+                    <syncfusion:GridTextColumn MappingName="Priority" HeaderText="Priority" Width="100">
+                        <syncfusion:GridTextColumn.CellStyle>
+                            <Style TargetType="syncfusion:GridCell">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Priority}" Value="High">
+                                        <Setter Property="Background" Value="#FFCDD2"/>
+                                        <!-- Red for High priority -->
+                                        <Setter Property="Foreground" Value="Black"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Priority}" Value="Medium">
+                                        <Setter Property="Background" Value="#FFEB3B"/>
+                                        <!-- Yellow for Medium priority -->
+                                        <Setter Property="Foreground" Value="Black"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Priority}" Value="Low">
+                                        <Setter Property="Background" Value="#C8E6C9"/>
+                                        <!-- Green for Low priority -->
+                                        <Setter Property="Foreground" Value="Black"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </syncfusion:GridTextColumn.CellStyle>
+                    </syncfusion:GridTextColumn>
+                </syncfusion:SfDataGrid.Columns>
+            </syncfusion:SfDataGrid>
+
+            <!-- Category List (Syncfusion CheckListBox) -->
+            <syncfusion:CheckListBox Grid.Column="1" Margin="5" Background="White" BorderBrush="#007ACC">
+                <syncfusion:CheckListBoxItem Content="Work" Foreground="#333333" />
+                <syncfusion:CheckListBoxItem Content="Personal" Foreground="#333333" />
+                <syncfusion:CheckListBoxItem Content="Fitness" Foreground="#333333" />
+            </syncfusion:CheckListBox>
+        </Grid>
     </Grid>
 </Window>
