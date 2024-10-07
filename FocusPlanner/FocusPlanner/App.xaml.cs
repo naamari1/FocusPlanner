@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Syncfusion.Licensing;
 using System.IO;
 using System.Windows;
 
@@ -19,6 +20,9 @@ namespace FocusPlanner
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             _serviceProvider = serviceCollection.BuildServiceProvider();
+
+            SyncfusionLicenseProvider.RegisterLicense("MzUwNzU1N0AzMjM3MmUzMDJlMzBvRDV1V2V2NmlxQlRQaVFGM2MrU1VuOTdHaktmN2NnSGYvdmhKRzAvMUpNPQ==");
+
         }
 
         private void ConfigureServices(IServiceCollection services)

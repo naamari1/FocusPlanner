@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="ViewModels\" />
-    <Folder Include="Views\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +30,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="27.1.51" />
+    <PackageReference Include="Syncfusion.SfTreeView.WPF" Version="27.1.51" />
+    <PackageReference Include="Syncfusion.Tools.WPF" Version="27.1.51" />
   </ItemGroup>
 
   <ItemGroup>
