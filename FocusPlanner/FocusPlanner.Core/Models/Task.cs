@@ -1,4 +1,6 @@
-﻿namespace FocusPlanner.Core.Models
+﻿using FocusPlanner.Core.Enum;
+
+namespace FocusPlanner.Core.Models
 {
     public class Task
     {
@@ -14,5 +16,7 @@
 
         // Navigation property for reminders
         public ICollection<Reminder> Reminders { get; set; }
+        public Priority Priority { get; set; }
+
     }
 }
