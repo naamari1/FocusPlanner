@@ -65,11 +65,13 @@
             </Grid.ColumnDefinitions>
 
             <!-- Task List (Syncfusion DataGrid) -->
-            <syncfusion:SfDataGrid x:Name="TaskDataGrid" Grid.Column="0" AutoGenerateColumns="False" Margin="5" 
-                                   Background="White" Foreground="#333333" 
-                                   
-                                   >
-                <!-- Blue header, alternating rows -->
+            <syncfusion:SfDataGrid x:Name="TaskDataGrid"
+                       Grid.Column="0"
+                       AutoGenerateColumns="False"
+                       Margin="5"
+                       Background="White"
+                       Foreground="#333333"
+                       ItemsSource="{Binding Tasks}">
                 <!-- Define your task columns here -->
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn MappingName="Title" HeaderText="Task" />
@@ -103,12 +105,19 @@
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
 
-            <!-- Category List (Syncfusion CheckListBox) -->
-            <syncfusion:CheckListBox Grid.Column="1" Margin="5" Background="White" BorderBrush="#007ACC">
-                <syncfusion:CheckListBoxItem Content="Work" Foreground="#333333" />
-                <syncfusion:CheckListBoxItem Content="Personal" Foreground="#333333" />
-                <syncfusion:CheckListBoxItem Content="Fitness" Foreground="#333333" />
-            </syncfusion:CheckListBox>
+            <ListBox x:Name="CategoryListBox"
+         ItemsSource="{Binding Categories}"
+         DisplayMemberPath="Name"
+         SelectionMode="Multiple"
+         SelectionChanged="CategoryListBox_SelectionChanged"
+         Grid.Column="1"
+         Margin="5"
+         Background="White"
+         BorderBrush="#007ACC"/>
+
+
+
+
         </Grid>
     </Grid>
 </Window>
