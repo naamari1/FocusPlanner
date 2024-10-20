@@ -1,4 +1,7 @@
-﻿using FocusPlanner.Infastructure.Data_Access;
+﻿using FocusPlanner.Core.Interfaces;
+using FocusPlanner.Infastructure.Data_Access;
+using FocusPlanner.Infastructure.Repositories;
+using FocusPlanner.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,9 +38,13 @@ namespace FocusPlanner
 
             // Add DbContext and configure SQL Server
             services.AddDbContext<TaskDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
 
             // Register other services and repositories here
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<MainViewModel>();
+
 
             // Register MainWindow to be resolved by the service provider
             services.AddSingleton<MainWindow>();
