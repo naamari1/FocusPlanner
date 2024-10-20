@@ -102,21 +102,26 @@ namespace FocusPlanner.ViewModels
 
         public async void FilterTasks()
         {
-            // Wanneer er geen categorieën geselecteerd zijn, toon dan alle taken of gefilterd op zoekterm
             if ((SelectedCategoriesList == null || !SelectedCategoriesList.Any()) && string.IsNullOrEmpty(SearchTerm))
             {
-                var allTasks = await _taskRepository.GetAllTasksAsync();  // Haal alle taken op
+                var allTasks = await _taskRepository.GetAllTasksAsync();
+
+                // Filter by completed status
+                if (ShowCompletedTasks)
+                {
+                    allTasks = allTasks.Where(t => t.IsCompleted);
+                }
+
                 Tasks.Clear();
                 foreach (var task in allTasks)
                 {
                     Tasks.Add(task);
                 }
-                return;  // Stop verdere verwerking omdat we alle taken tonen
+                return;
             }
 
-            // Wanneer er categorieën geselecteerd zijn, filter de taken
             var categoryIds = SelectedCategoriesList?.Select(c => c.Id).ToList() ?? new List<int>();
-            var filteredTasks = await _taskRepository.GetTasksByCategoriesAndSearchTermAsync(categoryIds, SearchTerm);
+            var filteredTasks = await _taskRepository.GetTasksByCategoriesSearchTermAndCompletionStatusAsync(categoryIds, SearchTerm, ShowCompletedTasks);
 
             Tasks.Clear();
             foreach (var task in filteredTasks)
@@ -124,6 +129,7 @@ namespace FocusPlanner.ViewModels
                 Tasks.Add(task);
             }
         }
+
 
 
 

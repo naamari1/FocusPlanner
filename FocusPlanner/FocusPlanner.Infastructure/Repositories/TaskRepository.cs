@@ -35,13 +35,21 @@ namespace FocusPlanner.Infastructure.Repositories
 
         public async Task<IEnumerable<Core.Models.Task>> GetAllTasksAsync()
         {
-            var tasks = await _context.Tasks
-          .Include(t => t.Category)
-          .Include(t => t.Reminders)
-          .ToListAsync();
+            // Create a new scope for the DbContext
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<TaskDbContext>();
 
-            return tasks;
+                // Perform the query
+                var tasks = await context.Tasks
+                    .Include(t => t.Category)
+                    .Include(t => t.Reminders)
+                    .ToListAsync();
+
+                return tasks;
+            }
         }
+
 
         public async Task<Core.Models.Task> GetTaskByIdAsync(int id)
         {
@@ -53,19 +61,35 @@ namespace FocusPlanner.Infastructure.Repositories
             return task;
         }
 
-        public async Task<IEnumerable<Core.Models.Task>> GetTasksByCategoriesAndSearchTermAsync(List<int> categoryIds, string searchTerm)
+        public async Task<IEnumerable<Core.Models.Task>> GetTasksByCategoriesSearchTermAndCompletionStatusAsync(List<int> categoryIds, string searchTerm, bool showCompletedTasks)
         {
-            // Create a new scope for the DbContext
             using (var scope = _serviceProvider.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<TaskDbContext>();
-                var tasks = await _context.Tasks
-                       .Where(t => (categoryIds.Count == 0 || categoryIds.Contains(t.CategoryId)) &&
-                                   (string.IsNullOrEmpty(searchTerm) || t.Title.Contains(searchTerm)))
-                       .ToListAsync();
-                return tasks;
+                var query = context.Tasks.AsQueryable();
+
+                // Filter by category
+                if (categoryIds.Count > 0)
+                {
+                    query = query.Where(t => categoryIds.Contains(t.CategoryId));
+                }
+
+                // Filter by search term
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    query = query.Where(t => t.Title.Contains(searchTerm));
+                }
+
+                // Filter by completed status if necessary
+                if (showCompletedTasks)  // Only show non-completed tasks if ShowCompletedTasks is false
+                {
+                    query = query.Where(t => t.IsCompleted);
+                }
+
+                return await query.ToListAsync();
             }
         }
+
 
 
         public async System.Threading.Tasks.Task UpdateTaskAsync(Core.Models.Task task)
