@@ -33,7 +33,8 @@ namespace FocusPlanner.Infastructure.Data_Access
                     Description = "Finish the FocusPlanner project",
                     DueDate = DateTime.Now.AddDays(3),
                     IsCompleted = false,
-                    CategoryId = 1
+                    CategoryId = 1,
+                    Priority = Core.Enum.Priority.High
                 },
                 new Core.Models.Task
                 {
@@ -42,7 +43,9 @@ namespace FocusPlanner.Infastructure.Data_Access
                     Description = "Complete full body workout",
                     DueDate = DateTime.Now.AddDays(1),
                     IsCompleted = false,
-                    CategoryId = 3
+                    CategoryId = 3,
+                    Priority = Core.Enum.Priority.Medium
+
                 }
             );
 
