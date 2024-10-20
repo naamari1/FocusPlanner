@@ -53,16 +53,16 @@ namespace FocusPlanner.Infastructure.Repositories
             return task;
         }
 
-        public async Task<IEnumerable<Core.Models.Task>> GetTasksByCategoriesAsync(IEnumerable<int> categoryIds)
+        public async Task<IEnumerable<Core.Models.Task>> GetTasksByCategoriesAndSearchTermAsync(List<int> categoryIds, string searchTerm)
         {
             // Create a new scope for the DbContext
             using (var scope = _serviceProvider.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<TaskDbContext>();
-                var tasks = await context.Tasks
-                    .Where(t => categoryIds.Contains(t.CategoryId))
-                    .Include(t => t.Category)
-                    .ToListAsync();
+                var tasks = await _context.Tasks
+                       .Where(t => (categoryIds.Count == 0 || categoryIds.Contains(t.CategoryId)) &&
+                                   (string.IsNullOrEmpty(searchTerm) || t.Title.Contains(searchTerm)))
+                       .ToListAsync();
                 return tasks;
             }
         }

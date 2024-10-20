@@ -42,5 +42,17 @@ namespace FocusPlanner
             // Update tasks based on the selected categories
             _mainViewModel.FilterTasks();
         }
+
+        private void checkComplete_Checked(object sender, RoutedEventArgs e)
+        {
+            _mainViewModel.FilterTasks();  // Trigger filtering when the checkbox is checked
+
+        }
+
+        private void checkComplete_Unchecked(object sender, RoutedEventArgs e)
+        {
+            _mainViewModel.FilterTasks();  // Trigger filtering when the checkbox is checked
+
+        }
     }
 }

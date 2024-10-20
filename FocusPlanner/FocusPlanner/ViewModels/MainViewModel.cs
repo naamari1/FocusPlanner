@@ -20,6 +20,18 @@ namespace FocusPlanner.ViewModels
             }
         }
 
+        private string _searchTerm;
+        public string SearchTerm
+        {
+            get => _searchTerm;
+            set
+            {
+                _searchTerm = value;
+                OnPropertyChanged(nameof(SearchTerm));
+                FilterTasks();  // Roep filteren aan elke keer dat de zoekterm verandert
+            }
+        }
+
         public ObservableCollection<Core.Models.Task> Tasks { get; set; }
 
         private ObservableCollection<Category> _selectedCategoriesList;
@@ -30,6 +42,18 @@ namespace FocusPlanner.ViewModels
             {
                 _selectedCategoriesList = value;
                 OnPropertyChanged(nameof(SelectedCategoriesList));
+            }
+        }
+
+        private bool _showCompletedTasks;
+        public bool ShowCompletedTasks
+        {
+            get => _showCompletedTasks;
+            set
+            {
+                _showCompletedTasks = value;
+                OnPropertyChanged(nameof(ShowCompletedTasks));
+                FilterTasks();  // Roep opnieuw de filter aan wanneer de waarde verandert
             }
         }
 
@@ -78,8 +102,8 @@ namespace FocusPlanner.ViewModels
 
         public async void FilterTasks()
         {
-            // Wanneer er geen categorieën geselecteerd zijn, toon dan alle taken
-            if (SelectedCategoriesList == null || !SelectedCategoriesList.Any())
+            // Wanneer er geen categorieën geselecteerd zijn, toon dan alle taken of gefilterd op zoekterm
+            if ((SelectedCategoriesList == null || !SelectedCategoriesList.Any()) && string.IsNullOrEmpty(SearchTerm))
             {
                 var allTasks = await _taskRepository.GetAllTasksAsync();  // Haal alle taken op
                 Tasks.Clear();
@@ -90,9 +114,9 @@ namespace FocusPlanner.ViewModels
                 return;  // Stop verdere verwerking omdat we alle taken tonen
             }
 
-            // Wanneer er wel categorieën geselecteerd zijn, filter de taken
-            var categoryIds = SelectedCategoriesList.Select(c => c.Id).ToList();
-            var filteredTasks = await _taskRepository.GetTasksByCategoriesAsync(categoryIds);
+            // Wanneer er categorieën geselecteerd zijn, filter de taken
+            var categoryIds = SelectedCategoriesList?.Select(c => c.Id).ToList() ?? new List<int>();
+            var filteredTasks = await _taskRepository.GetTasksByCategoriesAndSearchTermAsync(categoryIds, SearchTerm);
 
             Tasks.Clear();
             foreach (var task in filteredTasks)
@@ -100,6 +124,7 @@ namespace FocusPlanner.ViewModels
                 Tasks.Add(task);
             }
         }
+
 
 
     }

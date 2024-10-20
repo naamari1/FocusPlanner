@@ -42,12 +42,14 @@
 
         <!-- Search Box -->
         <TextBox x:Name="txtSearch" Grid.Row="0" Grid.Column="1" Width="400" Height="36" VerticalAlignment="Center" Margin="5"
-                 Background="White" BorderBrush="#007ACC" Foreground="Black" />
+         Background="White" BorderBrush="#007ACC" Foreground="Black" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" />
+
         <!-- White background with blue border -->
 
         <!-- Show Completed Tasks CheckBox -->
-        <CheckBox Content="Show Completed Tasks" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="5" 
-                  IsChecked="{Binding ShowCompletedTasks}" Foreground="#007ACC" />
+        <CheckBox x:Name="checkComplete" Content="Show Completed Tasks" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="5" 
+          IsChecked="{Binding ShowCompletedTasks}" Foreground="#007ACC" Checked="checkComplete_Checked" Unchecked="checkComplete_Unchecked" />
+
         <!-- Blue text for the checkbox -->
 
         <!-- Add Task Button -->

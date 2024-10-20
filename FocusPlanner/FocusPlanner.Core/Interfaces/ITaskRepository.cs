@@ -7,7 +7,7 @@
         Task AddTaskAsync(Core.Models.Task task);
         Task UpdateTaskAsync(Core.Models.Task task);
         Task DeleteTaskAsync(int id);
-        Task<IEnumerable<Core.Models.Task>> GetTasksByCategoriesAsync(IEnumerable<int> categoryIds);
+        Task<IEnumerable<Core.Models.Task>> GetTasksByCategoriesAndSearchTermAsync(List<int> categoryIds, string searchTerm);
 
     }
 }
