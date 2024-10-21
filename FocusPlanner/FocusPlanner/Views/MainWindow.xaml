@@ -36,7 +36,7 @@
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="5">
             <TextBlock Text="Due Date:" VerticalAlignment="Center" Margin="5,0" Foreground="#333333" />
             <!-- Dark text -->
-            <DatePicker x:Name="dueDatePicker" Width="150" Margin="5" Background="White" BorderBrush="#007ACC" />
+            <DatePicker x:Name="dueDatePicker" Width="150" Margin="5" Background="White" BorderBrush="#007ACC" SelectedDateChanged="dueDatePicker_SelectedDateChanged" />
             <!-- Blue border -->
         </StackPanel>
 

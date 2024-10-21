@@ -54,5 +54,12 @@ namespace FocusPlanner
             _mainViewModel.FilterTasks();  // Trigger filtering when the checkbox is checked
 
         }
+
+        private void dueDatePicker_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var selectedDate = dueDatePicker.SelectedDate;
+            _mainViewModel.DueDateFilter = selectedDate;
+            _mainViewModel.FilterTasks();
+        }
     }
 }

@@ -61,7 +61,7 @@ namespace FocusPlanner.Infastructure.Repositories
             return task;
         }
 
-        public async Task<IEnumerable<Core.Models.Task>> GetTasksByCategoriesSearchTermAndCompletionStatusAsync(List<int> categoryIds, string searchTerm, bool showCompletedTasks)
+        public async Task<IEnumerable<Core.Models.Task>> GetTasksByCategoriesSearchTermCompletionStatusAndDueDateAsync(List<int> categoryIds, string searchTerm, bool showCompletedTasks, DateTime? dueDateFilter)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -80,16 +80,21 @@ namespace FocusPlanner.Infastructure.Repositories
                     query = query.Where(t => t.Title.Contains(searchTerm));
                 }
 
-                // Filter by completed status if necessary
-                if (showCompletedTasks)  // Only show non-completed tasks if ShowCompletedTasks is false
+                // Filter by completed status
+                if (showCompletedTasks)
                 {
                     query = query.Where(t => t.IsCompleted);
+                }
+
+                // Filter by due date
+                if (dueDateFilter.HasValue)
+                {
+                    query = query.Where(t => t.DueDate.HasValue && t.DueDate.Value.Date <= dueDateFilter.Value.Date);
                 }
 
                 return await query.ToListAsync();
             }
         }
-
 
 
         public async System.Threading.Tasks.Task UpdateTaskAsync(Core.Models.Task task)

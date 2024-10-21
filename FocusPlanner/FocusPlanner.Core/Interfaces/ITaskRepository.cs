@@ -7,7 +7,7 @@
         Task AddTaskAsync(Core.Models.Task task);
         Task UpdateTaskAsync(Core.Models.Task task);
         Task DeleteTaskAsync(int id);
-        Task<IEnumerable<Core.Models.Task>> GetTasksByCategoriesSearchTermAndCompletionStatusAsync(List<int> categoryIds, string searchTerm, bool showCompletedTasks);
+        Task<IEnumerable<Core.Models.Task>> GetTasksByCategoriesSearchTermCompletionStatusAndDueDateAsync(List<int> categoryIds, string searchTerm, bool showCompletedTasks, DateTime? dueDateFilter);
 
     }
 }

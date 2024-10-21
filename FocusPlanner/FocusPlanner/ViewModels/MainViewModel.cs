@@ -57,6 +57,16 @@ namespace FocusPlanner.ViewModels
             }
         }
 
+        private DateTime? _dueDateFilter;
+        public DateTime? DueDateFilter
+        {
+            get => _dueDateFilter;
+            set
+            {
+                _dueDateFilter = value;
+                OnPropertyChanged(nameof(DueDateFilter));
+            }
+        }
 
 
         public MainViewModel(ITaskRepository taskRepository, ICategoryRepository categoryRepository)
@@ -102,33 +112,25 @@ namespace FocusPlanner.ViewModels
 
         public async void FilterTasks()
         {
-            if ((SelectedCategoriesList == null || !SelectedCategoriesList.Any()) && string.IsNullOrEmpty(SearchTerm))
-            {
-                var allTasks = await _taskRepository.GetAllTasksAsync();
-
-                // Filter by completed status
-                if (ShowCompletedTasks)
-                {
-                    allTasks = allTasks.Where(t => t.IsCompleted);
-                }
-
-                Tasks.Clear();
-                foreach (var task in allTasks)
-                {
-                    Tasks.Add(task);
-                }
-                return;
-            }
-
+            // Get the selected category IDs or initialize to an empty list if none are selected
             var categoryIds = SelectedCategoriesList?.Select(c => c.Id).ToList() ?? new List<int>();
-            var filteredTasks = await _taskRepository.GetTasksByCategoriesSearchTermAndCompletionStatusAsync(categoryIds, SearchTerm, ShowCompletedTasks);
 
+            // Get the filtered tasks from the repository based on the provided criteria
+            var filteredTasks = await _taskRepository.GetTasksByCategoriesSearchTermCompletionStatusAndDueDateAsync(
+                categoryIds,         // Filter by selected categories
+                SearchTerm,          // Filter by search term
+                ShowCompletedTasks,  // Filter by completed status
+                DueDateFilter        // Filter by due date
+            );
+
+            // Clear the current task list and populate with the filtered tasks
             Tasks.Clear();
             foreach (var task in filteredTasks)
             {
                 Tasks.Add(task);
             }
         }
+
 
 
 
