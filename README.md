@@ -1,4 +1,4 @@
-![FocusPlanner Logo](./FocusPlanner/Assets/DALL·E 2024-10-22 15.49.02 - Logo design for a productivity application called 'FocusPlanner'. The logo should feature a stylized letter 'F' intertwined with a pencil and a calend.webp)
+![FocusPlanner Logo](./FocusPlanner/FocusPlanner/Assets/DALL·E 2024-10-22 15.49.02 - Logo design for a productivity application called 'FocusPlanner'. The logo should feature a stylized letter 'F' intertwined with a pencil and a calend.webp)
 
 
 # FocusPlanner
