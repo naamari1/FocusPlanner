@@ -12,6 +12,7 @@
     <None Remove="appsettings.json" />
     <None Remove="Assets\DALL·E 2024-10-22 15.49.02 - Logo design for a productivity application called %27FocusPlanner%27. The logo should feature a stylized letter %27F%27 intertwined with a pencil and a calend.webp" />
     <None Remove="Assets\logo" />
+    <None Remove="Assets\Planner.webp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +45,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\logo">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Planner.webp">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
