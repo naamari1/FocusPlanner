@@ -99,8 +99,15 @@ namespace FocusPlanner.Infastructure.Repositories
 
         public async System.Threading.Tasks.Task UpdateTaskAsync(Core.Models.Task task)
         {
-            _context.Tasks.Update(task);
-            await _context.SaveChangesAsync();
+            var existingTask = await _context.Tasks.FindAsync(task.Id);
+
+            if (existingTask != null)
+            {
+                // Attach the existing task to the context and mark it as modified
+                _context.Entry(existingTask).CurrentValues.SetValues(task);
+                _context.Entry(existingTask).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

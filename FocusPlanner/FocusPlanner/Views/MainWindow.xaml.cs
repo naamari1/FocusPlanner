@@ -1,5 +1,6 @@
 ﻿using FocusPlanner.Core.Models;
 using FocusPlanner.ViewModels;
+using FocusPlanner.Views;
 using System.Windows;
 
 namespace FocusPlanner
@@ -61,5 +62,19 @@ namespace FocusPlanner
             _mainViewModel.DueDateFilter = selectedDate;
             _mainViewModel.FilterTasks();
         }
+
+        private void btnAddTask_Click(object sender, RoutedEventArgs e)
+        {
+            // Haal het MainViewModel op
+            var mainViewModel = (MainViewModel)this.DataContext;
+
+            // Maak een nieuwe instantie van AddTaAddTaskViewModel?iewModel
+            var addTaskViewModel = new AddTaskViewModel(mainViewModel.TaskRepository, mainViewModel.Categories, mainViewModel.Tasks, mainViewModel);
+
+            // Open het AddTaskView venster en geef het AddTaskViewModel door
+            var addTaskView = new AddTaskView(addTaskViewModel);
+            addTaskView.ShowDialog();
+        }
+
     }
 }

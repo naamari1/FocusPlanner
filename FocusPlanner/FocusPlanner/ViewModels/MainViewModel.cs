@@ -1,13 +1,23 @@
-﻿using FocusPlanner.Core.Interfaces;
+﻿using FocusPlanner.Command;
+using FocusPlanner.Core.Interfaces;
 using FocusPlanner.Core.Models;
 using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 
 namespace FocusPlanner.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        public ITaskRepository TaskRepository => _taskRepository; // Publieke eigenschap voor TaskRepository
+
+
         private readonly ITaskRepository _taskRepository;
         private readonly ICategoryRepository _categoryRepository;
+
+        public ICommand EditCommand { get; set; }
+        public ICommand DeleteCommand { get; set; }
+
 
         private ObservableCollection<Category> _categories;
         public ObservableCollection<Category> Categories
@@ -74,6 +84,10 @@ namespace FocusPlanner.ViewModels
             _taskRepository = taskRepository;
             _categoryRepository = categoryRepository;
 
+            EditCommand = new RelayCommand<Core.Models.Task>(ExecuteDeleteTask);
+            DeleteCommand = new RelayCommand<Core.Models.Task>(ExecuteDeleteTask);
+
+
             Tasks = new ObservableCollection<Core.Models.Task>();
             Categories = new ObservableCollection<Category>();
             SelectedCategoriesList = new ObservableCollection<Category>();
@@ -82,6 +96,18 @@ namespace FocusPlanner.ViewModels
             LoadDataAsync();
         }
 
+        private async void ExecuteDeleteTask(Core.Models.Task selectedTask)
+        {
+            if (selectedTask != null)
+            {
+                var result = MessageBox.Show($"Are you sure you want to delete the task '{selectedTask.Title}'?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    await _taskRepository.DeleteTaskAsync(selectedTask.Id);
+                    Tasks.Remove(selectedTask);
+                }
+            }
+        }
         private async System.Threading.Tasks.Task LoadDataAsync()
         {
             await LoadCategoriesAsync();
@@ -90,6 +116,7 @@ namespace FocusPlanner.ViewModels
 
         public async System.Threading.Tasks.Task LoadTasksAsync()
         {
+            Tasks.Clear();
             var tasks = await _taskRepository.GetAllTasksAsync();
             foreach (var task in tasks)
             {

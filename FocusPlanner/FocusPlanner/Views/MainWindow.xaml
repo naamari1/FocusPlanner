@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FocusPlanner"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         Title="FocusPlanner" Height="450" Width="900"
         Background="#F0F0F0">
@@ -54,58 +55,93 @@
 
         <!-- Add Task Button -->
         <Button x:Name="btnAddTask" Content="+" Grid.Row="0" Grid.Column="3" Width="40" Height="36" VerticalAlignment="Center" Margin="5"
-                Background="#007ACC" Foreground="White" BorderThickness="0" />
+                Background="#007ACC" Foreground="White" BorderThickness="0" Click="btnAddTask_Click" />
         <!-- Blue background, white text for the button -->
 
         <!-- Task List and CheckListBox Section -->
         <Grid Grid.Row="1" Grid.ColumnSpan="4" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="653*" />
                 <!-- SfDataGrid for tasks -->
-                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="227*" />
                 <!-- CheckListBox for categories -->
             </Grid.ColumnDefinitions>
 
             <!-- Task List (Syncfusion DataGrid) -->
+            <!-- Task List (Syncfusion DataGrid) -->
             <syncfusion:SfDataGrid x:Name="TaskDataGrid"
-                       Grid.Column="0"
-                       AutoGenerateColumns="False"
-                       Margin="5"
-                       Background="White"
-                       Foreground="#333333"
-                       ItemsSource="{Binding Tasks}">
+           Grid.Column="0"
+           AutoGenerateColumns="False"
+           Margin="5,5,5,5"
+           Background="White"
+           Foreground="#333333"
+           ItemsSource="{Binding Tasks}">
                 <!-- Define your task columns here -->
                 <syncfusion:SfDataGrid.Columns>
+                    <!-- Task Title Column -->
                     <syncfusion:GridTextColumn MappingName="Title" HeaderText="Task" />
+
+                    <!-- Due Date Column -->
                     <syncfusion:GridDateTimeColumn MappingName="DueDate" HeaderText="Due Date" Width="150" />
+
+                    <!-- IsCompleted Column -->
                     <syncfusion:GridCheckBoxColumn MappingName="IsCompleted" HeaderText="Completed" Width="100" />
 
-                    <!-- Priority column with dynamic color binding -->
+                    <!-- Priority Column with dynamic color binding -->
                     <syncfusion:GridTextColumn MappingName="Priority" HeaderText="Priority" Width="100">
                         <syncfusion:GridTextColumn.CellStyle>
                             <Style TargetType="syncfusion:GridCell">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Priority}" Value="High">
-                                        <Setter Property="Background" Value="#FFCDD2"/>
+                                        <Setter Property="Background" Value="#FFCDD2" />
                                         <!-- Red for High priority -->
-                                        <Setter Property="Foreground" Value="Black"/>
+                                        <Setter Property="Foreground" Value="Black" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Priority}" Value="Medium">
-                                        <Setter Property="Background" Value="#FFEB3B"/>
+                                        <Setter Property="Background" Value="#FFEB3B" />
                                         <!-- Yellow for Medium priority -->
-                                        <Setter Property="Foreground" Value="Black"/>
+                                        <Setter Property="Foreground" Value="Black" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Priority}" Value="Low">
-                                        <Setter Property="Background" Value="#C8E6C9"/>
+                                        <Setter Property="Background" Value="#C8E6C9" />
                                         <!-- Green for Low priority -->
-                                        <Setter Property="Foreground" Value="Black"/>
+                                        <Setter Property="Foreground" Value="Black" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </syncfusion:GridTextColumn.CellStyle>
                     </syncfusion:GridTextColumn>
+
+                    <!-- Edit Button Column with FontAwesome icon -->
+                    <syncfusion:GridTemplateColumn HeaderText="Edit" Width="50">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <!-- Button with FontAwesome pencil icon -->
+                                <Button Width="30" Height="30" Background="Transparent" BorderBrush="Transparent"
+                            Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=syncfusion:SfDataGrid}}"
+                            CommandParameter="{Binding}">
+                                    <fa:FontAwesome Icon="Pencil" FontSize="16" Foreground="#007ACC" />
+                                </Button>
+                            </DataTemplate>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
+
+                    <syncfusion:GridTemplateColumn HeaderText="Delete" Width="50">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Width="30" Height="30" Background="Transparent" BorderBrush="Transparent"
+                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=syncfusion:SfDataGrid}}"
+                    CommandParameter="{Binding}">
+                                    <fa:FontAwesome Icon="Trash" FontSize="16" Foreground="#FF0000" />
+                                </Button>
+                            </DataTemplate>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
+
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
+
+
 
             <ListBox x:Name="CategoryListBox"
          ItemsSource="{Binding Categories}"
@@ -113,7 +149,7 @@
          SelectionMode="Multiple"
          SelectionChanged="CategoryListBox_SelectionChanged"
          Grid.Column="1"
-         Margin="5"
+         Margin="5,5,5,5"
          Background="White"
          BorderBrush="#007ACC"/>
 
