@@ -76,5 +76,10 @@ namespace FocusPlanner
             addTaskView.ShowDialog();
         }
 
+        private void btnOpenCalendar_Click(object sender, RoutedEventArgs e)
+        {
+            var calendarView = new CalendarView(_mainViewModel);
+            calendarView.ShowDialog();
+        }
     }
 }

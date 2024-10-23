@@ -7,7 +7,7 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="FocusPlanner" Height="450" Width="900"
+        Title="FocusPlanner" Height="450" Width="1050"
         Background="#F0F0F0">
     <!-- Light gray background for the app -->
 
@@ -24,6 +24,8 @@
         <!-- Column Definitions -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+
             <!-- Date Filter Column -->
             <ColumnDefinition Width="*" />
             <!-- TextBox Column -->
@@ -42,20 +44,27 @@
         </StackPanel>
 
         <!-- Search Box -->
-        <TextBox x:Name="txtSearch" Grid.Row="0" Grid.Column="1" Width="400" Height="36" VerticalAlignment="Center" Margin="5"
-         Background="White" BorderBrush="#007ACC" Foreground="Black" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox x:Name="txtSearch" Height="26" Grid.Column="2" VerticalAlignment="Center"
+         Background="White" BorderBrush="#007ACC" Foreground="Black" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" Margin="26,0,26,0" />
 
         <!-- White background with blue border -->
 
         <!-- Show Completed Tasks CheckBox -->
-        <CheckBox x:Name="checkComplete" Content="Show Completed Tasks" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="5" 
+        <CheckBox x:Name="checkComplete" Content="Show Completed Tasks" Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" Margin="5" 
           IsChecked="{Binding ShowCompletedTasks}" Foreground="#007ACC" Checked="checkComplete_Checked" Unchecked="checkComplete_Unchecked" />
 
         <!-- Blue text for the checkbox -->
 
         <!-- Add Task Button -->
-        <Button x:Name="btnAddTask" Content="+" Grid.Row="0" Grid.Column="3" Width="40" Height="36" VerticalAlignment="Center" Margin="5"
+        <Button x:Name="btnAddTask" Content="+" Grid.Row="0" Grid.Column="4" Width="40" Height="36" VerticalAlignment="Center" Margin="5"
                 Background="#007ACC" Foreground="White" BorderThickness="0" Click="btnAddTask_Click" />
+
+        <!-- Place this Grid.Row and Grid.Column depending on your existing layout -->
+        <Button x:Name="btnOpenCalendar" Width="36" Grid.Row="0"  
+        ToolTip="Open Calendar" Grid.ColumnSpan="2" Margin="232,10,0,10" Click="btnOpenCalendar_Click" >
+            <fa:FontAwesome Icon="Calendar" FontSize="16" Foreground="White" />
+        </Button>
+
         <!-- Blue background, white text for the button -->
 
         <!-- Task List and CheckListBox Section -->
