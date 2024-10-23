@@ -22,12 +22,20 @@ namespace FocusPlanner.ViewModels
 
 
 
+
+
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime? DueDate { get; set; }
         public int SelectedCategoryId { get; set; }
         public int SelectedPriorityIndex { get; set; }
         public bool IsCompleted { get; set; }
+        public DateTime? StartDate { get; set; }
+        public string StartTime { get; set; }
+        public DateTime? FinishDate { get; set; }
+        public string FinishTime { get; set; }
+        public string DeadlineTime { get; set; }
+
 
 
         public AddTaskViewModel(ITaskRepository taskRepository, ObservableCollection<Category> categories, ObservableCollection<Core.Models.Task> tasks, MainViewModel mainViewModel, Core.Models.Task selectedTask = null)
@@ -47,6 +55,14 @@ namespace FocusPlanner.ViewModels
                 SelectedCategoryId = selectedTask.CategoryId;
                 SelectedPriorityIndex = (int)selectedTask.Priority;
                 IsCompleted = selectedTask.IsCompleted;
+                StartDate = selectedTask.StartDate;
+                FinishDate = selectedTask.FinishDate;
+
+
+                // Initialize StartTime and FinishTime based on StartDate and FinishDate
+                StartTime = selectedTask.StartDate.HasValue ? selectedTask.StartDate.Value.ToString("HH:mm") : null;
+                FinishTime = selectedTask.FinishDate.HasValue ? selectedTask.FinishDate.Value.ToString("HH:mm") : null;
+                DeadlineTime = selectedTask.DueDate.HasValue ? selectedTask.DueDate.Value.ToString("HH:mm") : null;
             }
             else
             {
@@ -63,48 +79,76 @@ namespace FocusPlanner.ViewModels
 
         public async Task<bool> AddTaskAsync(Core.Models.Task existingTask = null)
         {
-            // Perform validation inside ViewModel
             if (string.IsNullOrEmpty(Title) || SelectedCategoryId == 0 || SelectedPriorityIndex == -1)
             {
                 MessageBox.Show("Please fill in all required fields.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;  // Indicate that the operation was not successful
+                return false;
             }
 
             try
             {
+                // Combine StartDate and StartTime
+                DateTime? combinedStartDateTime = null;
+                if (StartDate.HasValue && !string.IsNullOrWhiteSpace(StartTime))
+                {
+                    if (DateTime.TryParse($"{StartDate.Value.ToShortDateString()} {StartTime}", out DateTime start))
+                    {
+                        combinedStartDateTime = start;
+                    }
+                }
+
+                // Combine FinishDate and FinishTime
+                DateTime? combinedFinishDateTime = null;
+                if (FinishDate.HasValue && !string.IsNullOrWhiteSpace(FinishTime))
+                {
+                    if (DateTime.TryParse($"{FinishDate.Value.ToShortDateString()} {FinishTime}", out DateTime finish))
+                    {
+                        combinedFinishDateTime = finish;
+                    }
+                }
+
+                DateTime? combinedDueDateTime = null;
+                if (DueDate.HasValue && !string.IsNullOrWhiteSpace(DeadlineTime))
+                {
+                    if (DateTime.TryParse($"{DueDate.Value.ToShortDateString()} {DeadlineTime}", out DateTime deadline))
+                    {
+                        combinedDueDateTime = deadline;
+                    }
+                }
+
                 if (existingTask == null)
                 {
-                    // Create a new task if no existing task is provided (Add mode)
                     var newTask = new Core.Models.Task
                     {
                         Title = this.Title,
                         Description = this.Description,
-                        DueDate = this.DueDate,
+                        DueDate = combinedDueDateTime,
+                        StartDate = combinedStartDateTime,
+                        FinishDate = combinedFinishDateTime,
                         Priority = (Priority)SelectedPriorityIndex,
                         CategoryId = this.SelectedCategoryId,
                         IsCompleted = this.IsCompleted
                     };
 
-                    // Add the new task to the repository
                     await taskRepository.AddTaskAsync(newTask);
-                    Tasks.Add(newTask); // Add the task to the in-memory collection (UI update)
+                    Tasks.Add(newTask);
                 }
                 else
                 {
-                    // Update the existing task (Edit mode)
                     existingTask.Title = this.Title;
                     existingTask.Description = this.Description;
-                    existingTask.DueDate = this.DueDate;
+                    existingTask.DueDate = combinedDueDateTime;
+                    existingTask.StartDate = combinedStartDateTime;
+                    existingTask.FinishDate = combinedFinishDateTime;
                     existingTask.Priority = (Priority)SelectedPriorityIndex;
                     existingTask.CategoryId = this.SelectedCategoryId;
                     existingTask.IsCompleted = this.IsCompleted;
 
-                    // Update the task in the repository
                     await taskRepository.UpdateTaskAsync(existingTask);
                     await mainViewModel.LoadTasksAsync();
                 }
 
-                return true;  // Indicate success
+                return true;
             }
             catch (Exception ex)
             {
@@ -112,6 +156,7 @@ namespace FocusPlanner.ViewModels
                 return false;
             }
         }
+
 
 
     }
