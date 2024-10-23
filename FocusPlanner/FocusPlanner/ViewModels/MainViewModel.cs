@@ -1,6 +1,7 @@
 ﻿using FocusPlanner.Command;
 using FocusPlanner.Core.Interfaces;
 using FocusPlanner.Core.Models;
+using FocusPlanner.Views;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -84,7 +85,7 @@ namespace FocusPlanner.ViewModels
             _taskRepository = taskRepository;
             _categoryRepository = categoryRepository;
 
-            EditCommand = new RelayCommand<Core.Models.Task>(ExecuteDeleteTask);
+            EditCommand = new RelayCommand<Core.Models.Task>(ExecuteEditTask);
             DeleteCommand = new RelayCommand<Core.Models.Task>(ExecuteDeleteTask);
 
 
@@ -94,6 +95,18 @@ namespace FocusPlanner.ViewModels
 
             // Load categories and tasks asynchronously
             LoadDataAsync();
+        }
+        private void ExecuteEditTask(Core.Models.Task selectedTask)
+        {
+            if (selectedTask != null)
+            {
+                // Create a new instance of AddTaskViewModel for editing
+                var editTaskViewModel = new AddTaskViewModel(_taskRepository, Categories, Tasks, this, selectedTask);
+
+                // Open the AddTaskView window for editing
+                var addTaskView = new AddTaskView(editTaskViewModel);
+                addTaskView.ShowDialog();  // Open as a dialog (modal window)
+            }
         }
 
         private async void ExecuteDeleteTask(Core.Models.Task selectedTask)
