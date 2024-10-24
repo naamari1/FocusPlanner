@@ -3,105 +3,169 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib" 
         xmlns:Syncfusion="http://schemas.syncfusion.com/wpf" x:Class="FocusPlanner.Views.AddTaskView" 
-        Title="Add New Task" Height="450" Width="950">
-    <Grid Margin="10">
+        Title="Add New Task" Height="450" Width="1050"
+        Background="AliceBlue"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Effect>
+        <DropShadowEffect BlurRadius="800" ShadowDepth="0" Color="#007ACC"/>
+    </Window.Effect>
+    
+    
+    <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+        <GroupBox Header="Task Information" Grid.Row="0" Grid.Column="0" Margin="10" Padding="2" Background="White">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Title:" FontSize="14" FontWeight="Bold"  Grid.Row="0" Margin="5"/>
+                <Border Grid.Row="1" Width="400" Padding="0" CornerRadius="5" BorderBrush="#007ACC" BorderThickness="2">
+                    <TextBox x:Name="TitleTextBox" Padding="5"
+                             Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" 
+                             Background="White" Foreground="#333333">
+                        <TextBox.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="2" Color="#AAAAAA"/>
+                        </TextBox.Effect>
+                    </TextBox>
+                </Border>
+                <TextBlock Text="Description:"  FontSize="14" FontWeight="Bold"  Grid.Row="2" Margin="5"/>
+                <Border Grid.Row="3" Width="400"  Padding="0" CornerRadius="5" Margin="0,0,0,15" BorderBrush="#007ACC" BorderThickness="2">
+                    <TextBox x:Name="DescriptionTextBox" Padding="5"
+              Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
+              Background="White" Foreground="#333333">
+                        <TextBox.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="2" Color="#AAAAAA"/>
+                        </TextBox.Effect>
+                    </TextBox>
+                </Border>
+
+            </Grid>
+
+        </GroupBox>
+
+        <GroupBox Header="Task Details" Grid.Row="1" Grid.Column="0" Margin="10" Padding="10" Background="White">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <!-- Column Definitions -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/> <!-- Narrow column for the border -->
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Title Label and TextBox -->
-        <TextBlock Text="Title:" Grid.Column="0"  Grid.Row="0" Margin="5" VerticalAlignment="Center"/>
-        <TextBox x:Name="TitleTextBox" Grid.Column="0"  Grid.Row="1" Width="400" Padding="5" HorizontalAlignment="Left"
-                 Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
-
-        <!-- Description Label and TextBox -->
-        <TextBlock Text="Description:" Grid.Column="0"  Grid.Row="2" Margin="5" VerticalAlignment="Center"/>
-        <TextBox x:Name="DescriptionTextBox" Grid.Column="0"  Grid.Row="3" Width="400" Padding="15" HorizontalAlignment="Left"
-                 Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
-
-        <!-- Due Date Label and DatePicker with Restriction for Past Dates -->
-        <!--<TextBlock Text="Due Date:" Grid.Column="0"  Grid.Row="4" Margin="5" VerticalAlignment="Center"/>
-        <DatePicker x:Name="DueDatePicker" Grid.Column="0"  Grid.Row="5" Width="200" HorizontalAlignment="Left" 
-                    SelectedDate="{Binding DueDate, UpdateSourceTrigger=PropertyChanged}"
-                    DisplayDateStart="{x:Static sys:DateTime.Now}" />-->
-
         <!-- Priority Label and ComboBox -->
-        <TextBlock Text="Priority:" Grid.Column="0"  Grid.Row="6" Margin="5" VerticalAlignment="Center"/>
-        <ComboBox x:Name="PriorityComboBox" Grid.Column="0"  Grid.Row="7" Width="100" HorizontalAlignment="Left"
-                  SelectedIndex="{Binding SelectedPriorityIndex, UpdateSourceTrigger=PropertyChanged}"
-                  ItemsSource="{Binding Priorities}" />
+        <TextBlock Text="Priority:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Black" Grid.Row="0" Grid.Column="0" Margin="5"/>
+        <Border Grid.Row="1" Grid.Column="0" Width="100" Padding="0" CornerRadius="5" BorderBrush="#007ACC" BorderThickness="2">
+            <ComboBox x:Name="PriorityComboBox" Padding="5"
+                      SelectedIndex="{Binding SelectedPriorityIndex, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding Priorities}" 
+                      Background="White" Foreground="#333333">
+                <ComboBox.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Color="#AAAAAA"/>
+                </ComboBox.Effect>
+            </ComboBox>
+        </Border>
+
+        <!-- Vertical Line (Border) in the middle -->
+        <Border Grid.Row="0" Grid.RowSpan="4" Grid.Column="1" Width="1" Background="Gray" />
 
         <!-- Category Label and ComboBox -->
-        <TextBlock Text="Category:" Grid.Column="0"  Grid.Row="8" Margin="5" VerticalAlignment="Center"/>
-        <ComboBox x:Name="CategoryComboBox" Grid.Column="0" Height="20" Grid.Row="9" Width="100" HorizontalAlignment="Left"
-          SelectedValue="{Binding SelectedCategoryId, UpdateSourceTrigger=PropertyChanged}"
-          SelectedValuePath="Id" DisplayMemberPath="Name" 
-          ItemsSource="{Binding Categories}" Margin="0,0,0,90" />
+        <TextBlock Text="Category:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Foreground="Black" Grid.Row="2" Grid.Column="0" Margin="5"/>
+        <Border Grid.Row="3" Grid.Column="0" Width="100" Padding="0" CornerRadius="5" BorderBrush="#007ACC" BorderThickness="2">
+            <ComboBox x:Name="CategoryComboBox" Padding="5"
+                      SelectedValue="{Binding SelectedCategoryId, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedValuePath="Id" DisplayMemberPath="Name" 
+                      ItemsSource="{Binding Categories}"
+                      Background="White" Foreground="#333333">
+                <ComboBox.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Color="#AAAAAA"/>
+                </ComboBox.Effect>
+            </ComboBox>
+        </Border>
 
-
-        <!-- Completed Checkbox -->
-        <TextBlock Text="Completed:" Grid.Column="0"  Grid.Row="9" Margin="5,34,5,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="IsCompletedCheckBox" Grid.Column="0"  Grid.Row="9" Margin="5,57,104,53"
-                  IsChecked="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged}" />
-
-        <!-- Buttons -->
-        <StackPanel Grid.Row="9" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10" Height="100">
-            <Button x:Name="btnTerug" Content="Terug" Margin="5" Width="50" Height="50" Click="btnTerug_Click"/>
-            <Button x:Name="btnAdd" Content="Add Task" Margin="5" Width="50" Height="50" Background="#007ACC" Foreground="White" Click="btnAdd_Click"/>
+        <!-- Task Completed Section in the second column -->
+        <StackPanel Grid.RowSpan="4" VerticalAlignment="Center" Grid.Column="2" Grid.Row="0">
+            <TextBlock Text="Task Completed:" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="5" Padding="0" HorizontalAlignment="Center"/>
+            <CheckBox x:Name="IsCompletedCheckBox" VerticalAlignment="Center" Margin="0" HorizontalAlignment="Center"
+                      IsChecked="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
+    </Grid>
+</GroupBox>
 
 
-        <StackPanel Grid.Row="2" Grid.Column="1"  Orientation="Horizontal" >
-            <TextBlock Text="Start Date:"  Margin="5" VerticalAlignment="Center"/>
-            <DatePicker x:Name="StartDatePicker"  Margin="15,5" Width="200" Height="30"
+        <GroupBox Header="Dates Information" Grid.Row="0" Grid.Column="1" Margin="10" Padding="10" Background="White">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0"   Orientation="Horizontal" >
+                    <TextBlock Text="Start Date:" FontSize="14" FontWeight="Bold"  Margin="5" VerticalAlignment="Center"/>
+                    <DatePicker x:Name="StartDatePicker"  Margin="15,5" Width="200" Height="30"
                     SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBlock Text="Time:"  Margin="13" VerticalAlignment="Center"/>
-            <TextBox x:Name="StartTimeTextBox"  Width="70" Margin="4" Height="30"
+                    <TextBlock Text="Time:" FontSize="14" FontWeight="Bold" Margin="13" VerticalAlignment="Center"/>
+                    <TextBox x:Name="StartTimeTextBox"  Width="70" Margin="4" Height="30"
                  Text="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}"
                  ToolTip="Enter time as HH:mm"/>
 
-        </StackPanel>
+                </StackPanel>
 
-        <StackPanel Grid.Row="3" Grid.Column="1"  Orientation="Horizontal" >
-            <TextBlock Text="Finish Date:"  Margin="5" VerticalAlignment="Center"/>
-            <DatePicker x:Name="FinishDatePicker"  Margin="10,5" Width="200"
+                <StackPanel Grid.Row="1"   Orientation="Horizontal" >
+                    <TextBlock Text="Finish Date:" FontSize="14" FontWeight="Bold" Margin="5" VerticalAlignment="Center"/>
+                    <DatePicker x:Name="FinishDatePicker"  Margin="10,5" Width="200"
             SelectedDate="{Binding FinishDate, UpdateSourceTrigger=PropertyChanged}" Height="30" />
-            <TextBlock Text="Time:"  Margin="17" VerticalAlignment="Center"/>
-            <TextBox x:Name="FinishTimeTextBox"  Width="70"  Margin="0" Height="30"
+                    <TextBlock Text="Time:"  Margin="17" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBox x:Name="FinishTimeTextBox"  Width="70"  Margin="0" Height="30"
          Text="{Binding FinishTime, UpdateSourceTrigger=PropertyChanged}"
          ToolTip="Enter time as HH:mm"/>
 
-        </StackPanel>
+                </StackPanel>
 
-        <StackPanel Grid.Row="4" Grid.Column="1"  Orientation="Horizontal" >
-            <TextBlock Text="Deadline:"  Margin="5" VerticalAlignment="Center"/>
-            <DatePicker x:Name="DueDatePicker" Width="200" Height="30" Margin="22,5"
+                <StackPanel Grid.Row="2"  Orientation="Horizontal" >
+                    <TextBlock Text="Deadline:" FontSize="14" FontWeight="Bold" Margin="5" VerticalAlignment="Center"/>
+                    <DatePicker x:Name="DueDatePicker" Width="200" Height="30" Margin="22,5"
       SelectedDate="{Binding DueDate, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Text="Time:"  Margin="4" VerticalAlignment="Center"/>
-            <TextBox   Width="70"  Margin="15,5" Height="30"
+                    <TextBlock Text="Time:"  Margin="4" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBox   Width="70"  Margin="15,5" Height="30"
   Text="{Binding DeadlineTime, UpdateSourceTrigger=PropertyChanged}"
   ToolTip="Enter time as HH:mm"/>
 
+                </StackPanel>
+
+            </Grid>
+        </GroupBox>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button x:Name="btnTerug" Content="Back" Width="80" Height="40" Margin="5" Click="btnTerug_Click"
+                    Background="#FFCC00" Foreground="White" BorderBrush="Black" BorderThickness="2"/>
+            <Button x:Name="btnAdd" Content="Save" Width="80" Height="40" Margin="5" Click="btnAdd_Click"
+                    Background="#007ACC" Foreground="White" BorderBrush="Black" BorderThickness="2">
+                <Button.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="3" Color="Gray"/>
+                </Button.Effect>
+            </Button>
         </StackPanel>
 
-       
     </Grid>
 </Window>
