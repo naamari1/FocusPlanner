@@ -1,5 +1,7 @@
-﻿using Syncfusion.UI.Xaml.Scheduler;
+﻿using FocusPlanner.Core.Enum;
+using Syncfusion.UI.Xaml.Scheduler;
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 
 namespace FocusPlanner.ViewModels
 {
@@ -33,15 +35,32 @@ namespace FocusPlanner.ViewModels
                 var appointment = new ScheduleAppointment
                 {
                     Subject = task.Title,
-                    StartTime = task.StartDate ?? DateTime.Now,  // Use StartDate, fallback to now if null
-                    EndTime = task.FinishDate ?? task.DueDate ?? DateTime.Now.AddHours(1),  // Use FinishDate or fallback to DueDate or 1 hour from now
+                    StartTime = task.StartDate ?? DateTime.Now,
+                    EndTime = task.FinishDate ?? task.DueDate ?? DateTime.Now.AddHours(1),
                     Notes = task.Description,
-                    IsAllDay = false  // Assuming appointments are not all-day events
+                    IsAllDay = false
                 };
+
+
+                switch (task.Priority)
+                {
+                    case Priority.Low:
+                        appointment.AppointmentBackground = new SolidColorBrush(Colors.LightGreen);
+                        break;
+                    case Priority.Medium:
+                        appointment.AppointmentBackground = new SolidColorBrush(Colors.Yellow);
+                        break;
+                    case Priority.High:
+                        appointment.AppointmentBackground = new SolidColorBrush(Colors.Red);
+                        break;
+                }
+
+                appointment.Foreground = new SolidColorBrush(Colors.Black);
 
                 Appointments.Add(appointment);
             }
         }
+
 
     }
 }
