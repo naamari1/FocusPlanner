@@ -91,7 +91,7 @@
                     <syncfusion:GridTextColumn MappingName="Title" HeaderText="Task" />
 
                     <!-- Due Date Column -->
-                    <syncfusion:GridDateTimeColumn MappingName="DueDate" HeaderText="Due Date" Width="150" />
+                    <syncfusion:GridDateTimeColumn MappingName="DueDate" HeaderText="Due Date" Width="150" DisplayBinding="{Binding DueDate, TargetNullValue='No deadline', StringFormat='{}{0:dd/MM/yyyy}'}"/>
 
                     <!-- IsCompleted Column -->
                     <syncfusion:GridCheckBoxColumn MappingName="IsCompleted" HeaderText="Completed" Width="100" />
