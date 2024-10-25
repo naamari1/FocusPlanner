@@ -13,7 +13,7 @@
                                 ItemsSource="{Binding Appointments}">
             <syncfusion:SfScheduler.DaysViewSettings>
                 <syncfusion:DaysViewSettings EndHour="22" 
-                    StartHour="6.5"  
+                    StartHour="7"  
                     TimeRulerFormat="HH:mm" />
             </syncfusion:SfScheduler.DaysViewSettings>
         </syncfusion:SfScheduler>
