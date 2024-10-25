@@ -31,7 +31,9 @@ namespace FocusPlanner.Infastructure.Data_Access
                     Id = 1,
                     Title = "Complete Project",
                     Description = "Finish the FocusPlanner project",
-                    DueDate = DateTime.Now.AddDays(3),
+                    StartDate = DateTime.Now.AddDays(1).AddHours(9), // Start morgen om 9:00 AM
+                    DueDate = DateTime.Now.AddDays(3).AddHours(17), // Due over drie dagen om 5:00 PM
+                    FinishDate = DateTime.Now.AddDays(3).AddHours(16), // Finish op dezelfde dag als due, maar een uur eerder
                     IsCompleted = false,
                     CategoryId = 1,
                     Priority = Core.Enum.Priority.High
@@ -41,13 +43,15 @@ namespace FocusPlanner.Infastructure.Data_Access
                     Id = 2,
                     Title = "Gym Workout",
                     Description = "Complete full body workout",
-                    DueDate = DateTime.Now.AddDays(1),
+                    StartDate = DateTime.Now.AddHours(2), // Start vandaag over twee uur
+                    DueDate = DateTime.Now.AddDays(1).AddHours(12), // Due morgen om 12:00 PM
+                    FinishDate = DateTime.Now.AddDays(1).AddHours(13), // Finish een uur na de due date
                     IsCompleted = false,
                     CategoryId = 3,
                     Priority = Core.Enum.Priority.Medium
-
                 }
             );
+
 
             // Data seeding voor Reminder
             modelBuilder.Entity<Reminder>().HasData(

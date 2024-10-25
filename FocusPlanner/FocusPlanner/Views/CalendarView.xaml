@@ -1,0 +1,21 @@
+﻿<Window x:Class="FocusPlanner.Views.CalendarView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        xmlns:local="clr-namespace:FocusPlanner.Views"
+        mc:Ignorable="d"
+        Title="CalendarView" Height="450" Width="800">
+    <Grid>
+        <syncfusion:SfScheduler x:Name="Schedule"
+                                ViewType="Week"
+                                ItemsSource="{Binding Appointments}">
+            <syncfusion:SfScheduler.DaysViewSettings>
+                <syncfusion:DaysViewSettings EndHour="22" 
+                    StartHour="7"  
+                    TimeRulerFormat="HH:mm" />
+            </syncfusion:SfScheduler.DaysViewSettings>
+        </syncfusion:SfScheduler>
+    </Grid>
+</Window>
