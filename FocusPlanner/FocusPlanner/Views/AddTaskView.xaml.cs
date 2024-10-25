@@ -1,5 +1,6 @@
 ﻿using FocusPlanner.ViewModels;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace FocusPlanner.Views
 {
@@ -18,7 +19,30 @@ namespace FocusPlanner.Views
 
 
 
+            StartDatePicker.SelectedDateChanged += DatePicker_SelectedDateChanged;
+            FinishDatePicker.SelectedDateChanged += DatePicker_SelectedDateChanged;
+            DueDatePicker.SelectedDateChanged += DatePicker_SelectedDateChanged;
 
+            Loaded += AddTaskView_Loaded;
+
+        }
+
+        private void AddTaskView_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateTimeTextBoxState();
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateTimeTextBoxState();
+        }
+
+
+        private void UpdateTimeTextBoxState()
+        {
+            StartTimeTextBox.IsEnabled = StartDatePicker.SelectedDate.HasValue;
+            FinishTimeTextBox.IsEnabled = FinishDatePicker.SelectedDate.HasValue;
+            DueTimeTextBox.IsEnabled = DueDatePicker.SelectedDate.HasValue;
         }
 
         private async void btnAdd_Click(object sender, RoutedEventArgs e)

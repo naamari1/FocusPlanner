@@ -147,7 +147,7 @@
                     <DatePicker x:Name="DueDatePicker" Width="200" Height="30" Margin="22,5"
       SelectedDate="{Binding DueDate, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="Time:"  Margin="4" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
-                    <TextBox   Width="70"  Margin="15,5" Height="30"
+                    <TextBox x:Name="DueTimeTextBox"   Width="70"  Margin="15,5" Height="30"
   Text="{Binding DeadlineTime, UpdateSourceTrigger=PropertyChanged}"
   ToolTip="Enter time as HH:mm"/>
 
