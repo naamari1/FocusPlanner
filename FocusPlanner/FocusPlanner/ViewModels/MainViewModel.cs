@@ -1,6 +1,7 @@
 ﻿using FocusPlanner.Command;
 using FocusPlanner.Core.Interfaces;
 using FocusPlanner.Core.Models;
+using FocusPlanner.Notification;
 using FocusPlanner.Views;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -15,6 +16,8 @@ namespace FocusPlanner.ViewModels
 
         private readonly ITaskRepository _taskRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly NotificationService notificationService;
+
 
         public ICommand EditCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
@@ -80,10 +83,11 @@ namespace FocusPlanner.ViewModels
         }
 
 
-        public MainViewModel(ITaskRepository taskRepository, ICategoryRepository categoryRepository)
+        public MainViewModel(ITaskRepository taskRepository, ICategoryRepository categoryRepository, NotificationService notificationService)
         {
             _taskRepository = taskRepository;
             _categoryRepository = categoryRepository;
+            this.notificationService = notificationService;
 
             EditCommand = new RelayCommand<Core.Models.Task>(ExecuteEditTask);
             DeleteCommand = new RelayCommand<Core.Models.Task>(ExecuteDeleteTask);
@@ -95,7 +99,33 @@ namespace FocusPlanner.ViewModels
 
             // Load categories and tasks asynchronously
             LoadDataAsync();
+
+            MonitorTaskDeadlines();
         }
+
+        private async void MonitorTaskDeadlines()
+        {
+            // Run this in a background loop
+            while (true)
+            {
+                var tasksToNotify = Tasks
+                    .Where(t => t.DueDate.HasValue &&
+                                t.DueDate.Value > DateTime.Now &&
+                                t.DueDate.Value <= DateTime.Now.AddMinutes(30))
+                    .ToList();
+
+                foreach (var task in tasksToNotify)
+                {
+                    await notificationService.ShowToastNotificationAsync(task.Title);
+                }
+
+                // Wait for a minute before checking again to reduce CPU usage
+                await System.Threading.Tasks.Task.Delay(TimeSpan.FromMinutes(1));
+            }
+        }
+
+
+
         private void ExecuteEditTask(Core.Models.Task selectedTask)
         {
             if (selectedTask != null)
