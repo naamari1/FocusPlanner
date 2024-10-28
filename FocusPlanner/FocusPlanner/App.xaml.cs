@@ -1,6 +1,7 @@
 ﻿using FocusPlanner.Core.Interfaces;
 using FocusPlanner.Infastructure.Data_Access;
 using FocusPlanner.Infastructure.Repositories;
+using FocusPlanner.Notification;
 using FocusPlanner.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -43,6 +44,9 @@ namespace FocusPlanner
             // Register other services and repositories here
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+            services.AddScoped<NotificationService>();
+
             services.AddScoped<MainViewModel>();
 
 
