@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FocusPlanner", "FocusPlanner\FocusPlanner.csproj", "{D7AA1ED9-A0A2-4332-9D67-1200132D2FCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocusPlanner", "FocusPlanner\FocusPlanner.csproj", "{D7AA1ED9-A0A2-4332-9D67-1200132D2FCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FocusPlanner.Core", "FocusPlanner.Core\FocusPlanner.Core.csproj", "{B046F321-98DE-489F-94A0-7E1623B36D63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocusPlanner.Core", "FocusPlanner.Core\FocusPlanner.Core.csproj", "{B046F321-98DE-489F-94A0-7E1623B36D63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FocusPlanner.Application", "FocusPlanner.Application\FocusPlanner.Application.csproj", "{F00EA49F-7873-4BA0-BC61-6E7A6B6BFFC9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FocusPlanner.Infastructure", "FocusPlanner.Infastructure\FocusPlanner.Infastructure.csproj", "{E03902EF-C85E-40A7-A4AD-83F10A64F5E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocusPlanner.Infastructure", "FocusPlanner.Infastructure\FocusPlanner.Infastructure.csproj", "{E03902EF-C85E-40A7-A4AD-83F10A64F5E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{B046F321-98DE-489F-94A0-7E1623B36D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B046F321-98DE-489F-94A0-7E1623B36D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B046F321-98DE-489F-94A0-7E1623B36D63}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F00EA49F-7873-4BA0-BC61-6E7A6B6BFFC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F00EA49F-7873-4BA0-BC61-6E7A6B6BFFC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F00EA49F-7873-4BA0-BC61-6E7A6B6BFFC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F00EA49F-7873-4BA0-BC61-6E7A6B6BFFC9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E03902EF-C85E-40A7-A4AD-83F10A64F5E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E03902EF-C85E-40A7-A4AD-83F10A64F5E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E03902EF-C85E-40A7-A4AD-83F10A64F5E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
