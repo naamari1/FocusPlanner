@@ -9,6 +9,8 @@ namespace FocusPlanner.Notification
     {
 
         private readonly string _audioFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "gog.mp3");
+        public readonly string AudioFilePath2 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "done.mp3");
+
 
         public async System.Threading.Tasks.Task ShowToastNotificationAsync(string title)
         {
@@ -22,7 +24,7 @@ namespace FocusPlanner.Notification
             await PlayMp3Async(_audioFilePath);
         }
 
-        private async System.Threading.Tasks.Task PlayMp3Async(string filePath, int playDurationInMilliseconds = 4000)
+        public async System.Threading.Tasks.Task PlayMp3Async(string filePath, int playDurationInMilliseconds = 9000)
         {
             Debug.WriteLine($"Afspelen van geluid van: {filePath}");
 
