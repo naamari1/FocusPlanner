@@ -131,7 +131,7 @@ namespace FocusPlanner.ViewModels
             if (selectedTask != null)
             {
                 // Create a new instance of AddTaskViewModel for editing
-                var editTaskViewModel = new AddTaskViewModel(_taskRepository, Categories, Tasks, this, selectedTask);
+                var editTaskViewModel = new AddTaskViewModel(_taskRepository, Categories, Tasks, this, notificationService, selectedTask);
 
                 // Open the AddTaskView window for editing
                 var addTaskView = new AddTaskView(editTaskViewModel);

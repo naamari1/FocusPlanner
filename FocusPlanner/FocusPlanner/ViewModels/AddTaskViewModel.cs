@@ -1,6 +1,7 @@
 ﻿using FocusPlanner.Core.Enum;
 using FocusPlanner.Core.Interfaces;
 using FocusPlanner.Core.Models;
+using FocusPlanner.Notification;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -10,6 +11,8 @@ namespace FocusPlanner.ViewModels
     {
 
         private readonly ITaskRepository taskRepository;
+        private readonly NotificationService notificationService;
+
 
         public ObservableCollection<Category> Categories { get; set; }
 
@@ -29,7 +32,31 @@ namespace FocusPlanner.ViewModels
         public DateTime? DueDate { get; set; }
         public int SelectedCategoryId { get; set; }
         public int SelectedPriorityIndex { get; set; }
-        public bool IsCompleted { get; set; }
+        private bool _isCompleted;
+        public bool IsCompleted
+        {
+            get => _isCompleted;
+            set
+            {
+                if (_isCompleted != value)
+                {
+                    _isCompleted = value;
+                    OnPropertyChanged(nameof(IsCompleted));
+
+                    // Play the "done" sound asynchronously if task is marked as completed
+                    if (_isCompleted)
+                    {
+                        PlayCompletionSoundAsync();
+                    }
+                }
+            }
+        }
+
+        // Helper async void method to play the completion sound
+        private async void PlayCompletionSoundAsync()
+        {
+            await notificationService.PlayMp3Async(notificationService.AudioFilePath2);
+        }
         public DateTime? StartDate { get; set; }
         public string StartTime { get; set; }
         public DateTime? FinishDate { get; set; }
@@ -38,13 +65,16 @@ namespace FocusPlanner.ViewModels
 
 
 
-        public AddTaskViewModel(ITaskRepository taskRepository, ObservableCollection<Category> categories, ObservableCollection<Core.Models.Task> tasks, MainViewModel mainViewModel, Core.Models.Task selectedTask = null)
+        public AddTaskViewModel(ITaskRepository taskRepository, ObservableCollection<Category> categories, ObservableCollection<Core.Models.Task> tasks, MainViewModel mainViewModel, NotificationService notificationService, Core.Models.Task selectedTask = null)
         {
             this.taskRepository = taskRepository;
             this.Categories = categories;
             this.Tasks = tasks;
             this.SelectedTask = selectedTask;
             this.mainViewModel = mainViewModel;
+            this.notificationService = notificationService;
+
+            _isCompleted = selectedTask?.IsCompleted ?? false;
 
             // If editing an existing task
             if (selectedTask != null)
@@ -74,6 +104,7 @@ namespace FocusPlanner.ViewModels
             }
 
             Priorities = Enum.GetNames(typeof(Priority)).ToList();
+
         }
 
 
