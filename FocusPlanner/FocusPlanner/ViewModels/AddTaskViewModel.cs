@@ -23,6 +23,7 @@ namespace FocusPlanner.ViewModels
         public Core.Models.Task SelectedTask { get; set; }
         private readonly MainViewModel mainViewModel;
 
+        public event Action TaskCompleted;
 
 
 
@@ -40,17 +41,27 @@ namespace FocusPlanner.ViewModels
             {
                 if (_isCompleted != value)
                 {
-                    _isCompleted = value;
-                    OnPropertyChanged(nameof(IsCompleted));
-
-                    // Play the "done" sound asynchronously if task is marked as completed
-                    if (_isCompleted)
+                    var result = MessageBox.Show("Are you really done with the task?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
                     {
-                        PlayCompletionSoundAsync();
+                        _isCompleted = value;
+                        OnPropertyChanged(nameof(IsCompleted));
+
+                        if (_isCompleted)
+                        {
+                            PlayCompletionSoundAsync();
+                            TaskCompleted?.Invoke(); // Trigger het event
+                        }
+                    }
+                    else
+                    {
+                        _isCompleted = false;
+                        OnPropertyChanged(nameof(IsCompleted));
                     }
                 }
             }
         }
+
 
         // Helper async void method to play the completion sound
         private async void PlayCompletionSoundAsync()

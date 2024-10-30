@@ -24,6 +24,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+
         <GroupBox Header="Task Information" Grid.Row="0" Grid.Column="0" Margin="10" Padding="2" Background="White">
             <Grid>
                 <Grid.RowDefinitions>
@@ -166,6 +167,9 @@
                 </Button.Effect>
             </Button>
         </StackPanel>
+
+        <Canvas x:Name="ConfettiCanvas" IsHitTestVisible="False" Visibility="Collapsed" Background="Transparent" 
+            Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" />
 
     </Grid>
 </Window>
