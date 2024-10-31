@@ -22,6 +22,8 @@ namespace FocusPlanner.ViewModels
         public ICommand EditCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
 
+        private readonly Dictionary<int, (bool Notified30, bool Notified10, bool Notified1)> taskNotifications = new();
+
 
         private ObservableCollection<Category> _categories;
         public ObservableCollection<Category> Categories
@@ -105,24 +107,69 @@ namespace FocusPlanner.ViewModels
 
         private async void MonitorTaskDeadlines()
         {
-            // Run this in a background loop
             while (true)
             {
-                var tasksToNotify = Tasks
+                var tasksToNotify30 = Tasks
                     .Where(t => t.DueDate.HasValue &&
                                 t.DueDate.Value > DateTime.Now &&
-                                t.DueDate.Value <= DateTime.Now.AddMinutes(30))
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes <= 30 &&
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes > 29 &&
+                                (!taskNotifications.ContainsKey(t.Id) || !taskNotifications[t.Id].Notified30))
                     .ToList();
 
-                foreach (var task in tasksToNotify)
+                foreach (var task in tasksToNotify30)
                 {
                     await notificationService.ShowToastNotificationAsync(task.Title);
+                    taskNotifications[task.Id] = (
+                        Notified30: true,
+                        Notified10: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified10 : false,
+                        Notified1: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified1 : false
+                    );
                 }
 
-                // Wait for a minute before checking again to reduce CPU usage
+                var tasksToNotify10 = Tasks
+                    .Where(t => t.DueDate.HasValue &&
+                                t.DueDate.Value > DateTime.Now &&
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes <= 10 &&
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes > 9 &&
+                                (!taskNotifications.ContainsKey(t.Id) || !taskNotifications[t.Id].Notified10))
+                    .ToList();
+
+                foreach (var task in tasksToNotify10)
+                {
+                    await notificationService.ShowToastNotification10minAsync(task.Title);
+                    taskNotifications[task.Id] = (
+                        Notified30: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified30 : false,
+                        Notified10: true,
+                        Notified1: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified1 : false
+                    );
+                }
+
+                var tasksToNotify1 = Tasks
+                    .Where(t => t.DueDate.HasValue &&
+                                t.DueDate.Value > DateTime.Now &&
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes <= 2 &&
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes > 1 &&
+                                (!taskNotifications.ContainsKey(t.Id) || !taskNotifications[t.Id].Notified1))
+                    .ToList();
+
+                foreach (var task in tasksToNotify1)
+                {
+                    await notificationService.ShowToastNotification1minAsync(task.Title);
+                    taskNotifications[task.Id] = (
+                        Notified30: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified30 : false,
+                        Notified10: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified10 : false,
+                        Notified1: true
+                    );
+                }
+
+                // Wait for a minute before checking again
                 await System.Threading.Tasks.Task.Delay(TimeSpan.FromMinutes(1));
             }
         }
+
+
+
 
 
 
