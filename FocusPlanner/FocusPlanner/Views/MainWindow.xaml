@@ -7,7 +7,7 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="FocusPlanner" Height="450" Width="1050"
+        Title="FocusPlanner" Height="450" Width="1250"
         Background="#F0F0F0">
     <!-- Light gray background for the app -->
 
@@ -88,10 +88,13 @@
                 <!-- Define your task columns here -->
                 <syncfusion:SfDataGrid.Columns>
                     <!-- Task Title Column -->
-                    <syncfusion:GridTextColumn MappingName="Title" HeaderText="Task" />
+                    <syncfusion:GridTextColumn MappingName="Title" HeaderText="Task" Width="200" />
+
+                    <syncfusion:GridDateTimeColumn MappingName="StartDate" HeaderText="StartDate" Width="150" DisplayBinding="{Binding StartDate, TargetNullValue='No StartDate', StringFormat='{}{0:dd/MM/yyyy}'}"/>
 
                     <!-- Due Date Column -->
                     <syncfusion:GridDateTimeColumn MappingName="DueDate" HeaderText="Due Date" Width="150" DisplayBinding="{Binding DueDate, TargetNullValue='No deadline', StringFormat='{}{0:dd/MM/yyyy}'}"/>
+
 
                     <!-- IsCompleted Column -->
                     <syncfusion:GridCheckBoxColumn MappingName="IsCompleted" HeaderText="Completed" Width="100" />

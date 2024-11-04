@@ -22,5 +22,8 @@ namespace FocusPlanner.Core.Models
         public ICollection<Reminder> Reminders { get; set; }
         public Priority Priority { get; set; }
 
+        public bool HasNotified { get; set; } = false;
+
+
     }
 }

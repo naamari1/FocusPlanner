@@ -1,5 +1,4 @@
-﻿using FocusPlanner.Core.Enum;
-using Syncfusion.UI.Xaml.Scheduler;
+﻿using Syncfusion.UI.Xaml.Scheduler;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 
@@ -42,16 +41,19 @@ namespace FocusPlanner.ViewModels
                 };
 
 
-                switch (task.Priority)
+                switch (task.Category.Name)
                 {
-                    case Priority.Low:
+                    case "Work":
                         appointment.AppointmentBackground = new SolidColorBrush(Colors.LightGreen);
                         break;
-                    case Priority.Medium:
+                    case "Personal":
                         appointment.AppointmentBackground = new SolidColorBrush(Colors.Yellow);
                         break;
-                    case Priority.High:
+                    case "Fitness":
                         appointment.AppointmentBackground = new SolidColorBrush(Colors.Red);
+                        break;
+                    default:
+                        appointment.AppointmentBackground = new SolidColorBrush(Colors.Gray);
                         break;
                 }
 

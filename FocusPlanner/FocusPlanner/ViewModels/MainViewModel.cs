@@ -1,6 +1,7 @@
 ﻿using FocusPlanner.Command;
 using FocusPlanner.Core.Interfaces;
 using FocusPlanner.Core.Models;
+using FocusPlanner.Notification;
 using FocusPlanner.Views;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -15,9 +16,13 @@ namespace FocusPlanner.ViewModels
 
         private readonly ITaskRepository _taskRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly NotificationService notificationService;
+
 
         public ICommand EditCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
+
+        private readonly Dictionary<int, (bool Notified30, bool Notified10, bool Notified1)> taskNotifications = new();
 
 
         private ObservableCollection<Category> _categories;
@@ -80,10 +85,11 @@ namespace FocusPlanner.ViewModels
         }
 
 
-        public MainViewModel(ITaskRepository taskRepository, ICategoryRepository categoryRepository)
+        public MainViewModel(ITaskRepository taskRepository, ICategoryRepository categoryRepository, NotificationService notificationService)
         {
             _taskRepository = taskRepository;
             _categoryRepository = categoryRepository;
+            this.notificationService = notificationService;
 
             EditCommand = new RelayCommand<Core.Models.Task>(ExecuteEditTask);
             DeleteCommand = new RelayCommand<Core.Models.Task>(ExecuteDeleteTask);
@@ -95,13 +101,84 @@ namespace FocusPlanner.ViewModels
 
             // Load categories and tasks asynchronously
             LoadDataAsync();
+
+            MonitorTaskDeadlines();
         }
+
+        private async void MonitorTaskDeadlines()
+        {
+            while (true)
+            {
+                var tasksToNotify30 = Tasks
+                    .Where(t => t.DueDate.HasValue &&
+                                t.DueDate.Value > DateTime.Now &&
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes <= 30 &&
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes > 29 &&
+                                (!taskNotifications.ContainsKey(t.Id) || !taskNotifications[t.Id].Notified30))
+                    .ToList();
+
+                foreach (var task in tasksToNotify30)
+                {
+                    await notificationService.ShowToastNotificationAsync(task.Title);
+                    taskNotifications[task.Id] = (
+                        Notified30: true,
+                        Notified10: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified10 : false,
+                        Notified1: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified1 : false
+                    );
+                }
+
+                var tasksToNotify10 = Tasks
+                    .Where(t => t.DueDate.HasValue &&
+                                t.DueDate.Value > DateTime.Now &&
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes <= 10 &&
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes > 9 &&
+                                (!taskNotifications.ContainsKey(t.Id) || !taskNotifications[t.Id].Notified10))
+                    .ToList();
+
+                foreach (var task in tasksToNotify10)
+                {
+                    await notificationService.ShowToastNotification10minAsync(task.Title);
+                    taskNotifications[task.Id] = (
+                        Notified30: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified30 : false,
+                        Notified10: true,
+                        Notified1: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified1 : false
+                    );
+                }
+
+                var tasksToNotify1 = Tasks
+                    .Where(t => t.DueDate.HasValue &&
+                                t.DueDate.Value > DateTime.Now &&
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes <= 2 &&
+                                (t.DueDate.Value - DateTime.Now).TotalMinutes > 1 &&
+                                (!taskNotifications.ContainsKey(t.Id) || !taskNotifications[t.Id].Notified1))
+                    .ToList();
+
+                foreach (var task in tasksToNotify1)
+                {
+                    await notificationService.ShowToastNotification1minAsync(task.Title);
+                    taskNotifications[task.Id] = (
+                        Notified30: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified30 : false,
+                        Notified10: taskNotifications.ContainsKey(task.Id) ? taskNotifications[task.Id].Notified10 : false,
+                        Notified1: true
+                    );
+                }
+
+                // Wait for a minute before checking again
+                await System.Threading.Tasks.Task.Delay(TimeSpan.FromMinutes(1));
+            }
+        }
+
+
+
+
+
+
         private void ExecuteEditTask(Core.Models.Task selectedTask)
         {
             if (selectedTask != null)
             {
                 // Create a new instance of AddTaskViewModel for editing
-                var editTaskViewModel = new AddTaskViewModel(_taskRepository, Categories, Tasks, this, selectedTask);
+                var editTaskViewModel = new AddTaskViewModel(_taskRepository, Categories, Tasks, this, notificationService, selectedTask);
 
                 // Open the AddTaskView window for editing
                 var addTaskView = new AddTaskView(editTaskViewModel);

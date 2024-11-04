@@ -1,4 +1,5 @@
 ﻿using FocusPlanner.Core.Models;
+using FocusPlanner.Notification;
 using FocusPlanner.ViewModels;
 using FocusPlanner.Views;
 using System.Windows;
@@ -11,14 +12,15 @@ namespace FocusPlanner
     public partial class MainWindow : Window
     {
         private readonly MainViewModel _mainViewModel;
+        private readonly NotificationService notificationService;
 
-        public MainWindow(MainViewModel mainViewModel)
+        public MainWindow(MainViewModel mainViewModel, NotificationService notificationService)
         {
             InitializeComponent();
             _mainViewModel = mainViewModel;
 
             DataContext = _mainViewModel;
-
+            this.notificationService = notificationService;
         }
 
         private void CategoryListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -69,7 +71,7 @@ namespace FocusPlanner
             var mainViewModel = (MainViewModel)this.DataContext;
 
             // Maak een nieuwe instantie van AddTaAddTaskViewModel?iewModel
-            var addTaskViewModel = new AddTaskViewModel(mainViewModel.TaskRepository, mainViewModel.Categories, mainViewModel.Tasks, mainViewModel);
+            var addTaskViewModel = new AddTaskViewModel(mainViewModel.TaskRepository, mainViewModel.Categories, mainViewModel.Tasks, mainViewModel, notificationService);
 
             // Open het AddTaskView venster en geef het AddTaskViewModel door
             var addTaskView = new AddTaskView(addTaskViewModel);

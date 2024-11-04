@@ -1,6 +1,9 @@
 ﻿using FocusPlanner.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 
 namespace FocusPlanner.Views
 {
@@ -17,6 +20,7 @@ namespace FocusPlanner.Views
             _addTaskViewModel = addTaskViewModel;
             DataContext = _addTaskViewModel;
 
+            _addTaskViewModel.TaskCompleted += async () => await PlayConfettiAnimationAsync(); // Abonneer het event op de animatiemethode
 
 
             StartDatePicker.SelectedDateChanged += DatePicker_SelectedDateChanged;
@@ -59,5 +63,66 @@ namespace FocusPlanner.Views
             this.Close();
 
         }
+
+        private async Task PlayConfettiAnimationAsync()
+        {
+            ConfettiCanvas.Visibility = Visibility.Visible;
+
+            // Wacht tot de layout volledig is bijgewerkt en het Canvas de juiste afmetingen heeft
+            await Dispatcher.InvokeAsync(() => { }, System.Windows.Threading.DispatcherPriority.Loaded);
+
+            Random random = new Random();
+
+            // Voeg meerdere confetti-elementen toe
+            for (int i = 0; i < 400; i++)
+            {
+                var confetti = new Ellipse
+                {
+                    Width = 10,
+                    Height = 10,
+                    Fill = new SolidColorBrush(Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256))),
+                    Opacity = 0.8
+                };
+
+                ConfettiCanvas.Children.Add(confetti);
+
+                // Startpositie instellen met meer variatie in de verticale spreiding
+                double startX = random.Next(0, (int)ConfettiCanvas.ActualWidth);
+                double startY = random.Next(-600, -20); // Willekeurige hoogte boven het canvas voor spreiding
+
+                double endX = startX + random.Next(-200, 200); // Grotere x-beweging voor bredere spreiding
+                double endY = ConfettiCanvas.ActualHeight + 20;
+
+                var translateTransform = new TranslateTransform(startX, startY);
+                confetti.RenderTransform = translateTransform;
+
+                // Langzamere x- en y-animatie voor trager vallende confetti
+                var xAnimation = new DoubleAnimation
+                {
+                    From = startX,
+                    To = endX,
+                    Duration = TimeSpan.FromSeconds(6 + random.NextDouble() * 3), // Langere duur voor bredere spreiding
+                    EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut }
+                };
+
+                var yAnimation = new DoubleAnimation
+                {
+                    From = startY,
+                    To = endY,
+                    Duration = TimeSpan.FromSeconds(8 + random.NextDouble() * 4), // Langere duur voor trager vallen
+                    EasingFunction = new SineEase { EasingMode = EasingMode.EaseOut }
+                };
+
+                translateTransform.BeginAnimation(TranslateTransform.XProperty, xAnimation);
+                translateTransform.BeginAnimation(TranslateTransform.YProperty, yAnimation);
+            }
+
+            await Task.Delay(9000);
+            ConfettiCanvas.Children.Clear();
+            ConfettiCanvas.Visibility = Visibility.Collapsed;
+        }
+
+
+
     }
 }
